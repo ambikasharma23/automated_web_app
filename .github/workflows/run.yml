@@ -1,9 +1,15 @@
 name: Device Automation
 
+permissions:
+  contents: write   # <--- allow pushing to the repo
+
 on:
   schedule:
     - cron: "*/15 * * * *"  # every 15 minutes
   workflow_dispatch:         # allow manual trigger
+  push:
+    branches:
+      - main                 # optional: also run on pushes to main
 
 jobs:
   run-automation:
@@ -32,3 +38,5 @@ jobs:
           git add reports/
           git commit -m "Update reports [skip ci]" || echo "No changes to commit"
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # <--- ensures push works
